@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# coffeelint
+ABORT="false"
+FILENAMES=$(git diff --cached --name-only --diff-filter=ACMR)
+
+while read FILENAME; do
+  if [[ "$FILENAME" =~ ^.+coffee$ ]]; then
+    coffeelint "$FILENAME" >&2
+    if [ $? -ne 0 ]; then
+      ABORT="true"
+      fi
+      fi done <<< "$FILENAMES"
+      if [ "$ABORT" == "true" ]; then
+  echo -e "Aborting commit due to lint.\
+    \nBrew some tastier coffeescript."
+  exit 1
+fi
